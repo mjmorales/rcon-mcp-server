@@ -13,10 +13,43 @@ A Model Context Protocol (MCP) server that provides tools for connecting to and 
 
 ## Installation
 
+### Quick Install (Recommended)
+
+You can install a pre-built binary using our install script:
+
+```bash
+# Install the latest version (replace v1.0.0 with desired version)
+curl -sSfL https://raw.githubusercontent.com/mjmorales/rcon-mcp-server/main/bin/install.sh | bash -s v1.0.0
+```
+
+Or if you prefer to review the script first:
+
+```bash
+# Download and review the script
+curl -sSfL https://raw.githubusercontent.com/mjmorales/rcon-mcp-server/main/bin/install.sh -o install.sh
+cat install.sh  # Review the script
+bash install.sh v1.0.0
+```
+
+The install script will:
+- Automatically detect your OS and architecture
+- Download the appropriate pre-built binary
+- Install it to `/usr/local/bin` (or current directory if no write access)
+
 ### Prerequisites
 
-- Go 1.24.5 or higher
-- Git
+- Go 1.24.5 or higher (only for building from source)
+- Git (only for building from source)
+
+### Install with go install
+
+If you have Go installed, you can install directly from source:
+
+```bash
+go install github.com/mjmorales/rcon-mcp-server@latest
+```
+
+This will download, compile, and install the binary to your `$GOPATH/bin` directory.
 
 ### Building from Source
 
