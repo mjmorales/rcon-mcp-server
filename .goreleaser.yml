@@ -41,8 +41,6 @@ archives:
     files:
       - README.md
       - LICENSE
-      - daemons.example.yaml
-      - docs/*
 
 checksum:
   name_template: "checksums.txt"
