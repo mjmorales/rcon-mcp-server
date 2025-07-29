@@ -1,0 +1,116 @@
+# .goreleaser.yml
+# Documentation: https://goreleaser.com/customization/
+
+version: 2
+
+project_name: rcon-mcp-server
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod download
+
+builds:
+  - id: rcon-mcp-server
+    main: ./main.go
+    binary: rcon-mcp-server
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+      - -X main.builtBy=goreleaser
+
+archives:
+  - id: rcon-mcp-server
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    files:
+      - README.md
+      - LICENSE
+      - daemons.example.yaml
+      - docs/*
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "^style:"
+      - "^refactor:"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+  groups:
+    - title: "🚀 Features"
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: "🐛 Bug Fixes"
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: "⚡ Performance Improvements"
+      regexp: "^.*perf[(\\w)]*:+.*$"
+      order: 2
+    - title: "🔨 Build System"
+      regexp: "^.*build[(\\w)]*:+.*$"
+      order: 3
+    - title: "👷 CI/CD"
+      regexp: "^.*ci[(\\w)]*:+.*$"
+      order: 4
+    - title: "📝 Documentation"
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 5
+    - title: "🧪 Tests"
+      regexp: "^.*test[(\\w)]*:+.*$"
+      order: 6
+    - title: "💄 Style"
+      regexp: "^.*style[(\\w)]*:+.*$"
+      order: 7
+    - title: "♻️ Refactoring"
+      regexp: "^.*refactor[(\\w)]*:+.*$"
+      order: 8
+    - title: "🔧 Configuration"
+      regexp: "^.*chore[(\\w)]*:+.*$"
+      order: 9
+    - title: "🌐 Internationalization"
+      regexp: "^.*i18n[(\\w)]*:+.*$"
+      order: 10
+    - title: "Others"
+      order: 999
+
+release:
+  github:
+    owner: mjmorales
+    name: rcon-mcp-server
+  draft: false
+  prerelease: auto
+  name_template: "{{.ProjectName}} v{{.Version}}"
+
+# SBOM generation
+sboms:
+  - artifacts: archive
+    args: ["$artifact", "--file", "${document}", "--output", "cyclonedx-json"]
+    cmd: syft
