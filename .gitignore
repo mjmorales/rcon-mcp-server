@@ -1,2 +1,5 @@
 .history/
 .DS_Store
+coverage.*
+# Added by goreleaser init:
+dist/
