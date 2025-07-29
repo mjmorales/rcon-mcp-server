@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "rcon": {
+      "command": "/Users/mmorales/dev/mantle/rcon-mcp-server/rcon-mcp-server",
+      "args": ["serve"],
+      "env": {}
+    }
+  }
+}
