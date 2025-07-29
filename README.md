@@ -114,6 +114,38 @@ For Claude Desktop or other MCP clients, add this to your configuration:
 }
 ```
 
+### Running as a Daemon
+
+A useful tool to run as a daemon on OSX is https://github.com/mjmorales/daemon-control
+
+Manually add this configuration to your daemon-control `daemons.yml` using `daemon-control edit`:
+
+```yaml
+daemons:
+  - name: rcon-mcp-server
+    label: com.mjmorales.rcon-mcp-server
+    description: RCON Model Context Protocol server
+    program_arguments:
+      - /path/to/rcon-mcp-server
+      - serve
+    working_directory: /path/to/rcon-mcp-server
+    environment_variables:
+      PATH: /usr/local/bin:/usr/bin:/bin
+    standard_out_path: $HOME/Library/Logs/rcon-mcp-server.log
+    standard_error_path: $HOME/Library/Logs/rcon-mcp-server.error.log
+    run_at_load: true
+    keep_alive:
+      successful_exit: false
+      crashed: true
+    throttle_interval: 30
+```
+
+This configuration will:
+- Start the server automatically at system boot
+- Restart it if it crashes
+- Log output to `~/Library/Logs/`
+- Use a 30-second throttle to prevent rapid restart loops
+
 ## Development
 
 ### Project Structure
